@@ -1,0 +1,2 @@
+Os CSVs do benchmark serao gravados automaticamente nesta pasta quando a aplicacao terminar uma execucao.
+Nenhum resultado real foi incluido como exemplo para evitar confundir dados simulados com as medicoes do seu computador.

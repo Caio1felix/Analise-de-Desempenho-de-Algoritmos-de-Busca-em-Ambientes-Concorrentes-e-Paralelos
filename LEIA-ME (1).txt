@@ -1,0 +1,97 @@
+BENCHMARK DE ORDENACAO SERIAL E PARALELA — JAVA
+================================================
+
+O QUE E
+-------
+Aplicacao de desktop com interface grafica Swing para executar e comparar:
+- Bubble Sort serial e sua variante paralela Odd-Even Transposition Sort;
+- Merge Sort serial e paralelo com ForkJoinPool;
+- Selection Sort serial e busca paralela do minimo da parte ainda nao ordenada;
+- Insertion Sort serial e uma variante paralela por blocos, seguida de merge dos blocos.
+
+Apesar de o enunciado mencionar “busca”, Bubble Sort, Merge Sort, Selection Sort e
+Insertion Sort sao algoritmos de ORDENACAO. O programa segue os quatro algoritmos
+que foram efetivamente listados no enunciado.
+
+REQUISITO
+---------
+- Java 17 ou mais recente.
+- Nenhuma biblioteca externa e necessaria. A interface Swing, o paralelismo com
+  ForkJoinPool e os demais recursos usados pertencem ao Java.
+
+COMO EXECUTAR NO WINDOWS
+------------------------
+1. Extraia toda a pasta do ZIP para um local gravavel.
+2. Se Java 17+ ja estiver instalado, de dois cliques em Iniciar.bat.
+3. Se o JAR nao abrir por associacao de arquivos, use Iniciar.bat.
+4. Se aparecer que Java nao foi encontrado, instale um JDK/JRE 17 ou mais recente
+   e verifique no Prompt de Comando com: java -version
+
+O arquivo OrdenacaoParalela.jar ja esta compilado. O codigo-fonte fica em
+src/BenchmarkOrdenacaoApp.java. O script Compilar_e_Executar.bat recompila o fonte
+e abre a interface; para isso, e necessario ter o JDK (incluindo javac) instalado.
+
+COMO USAR
+---------
+- Tamanhos dos vetores: numeros separados por virgula, por exemplo 250, 500, 1000.
+- Amostras: minimo de 5 por configuracao; o campo ja comeca em 5.
+- Threads paralelas: numeros separados por virgula, por exemplo 2, 4. O programa
+  rejeita quantidades acima do numero de processadores disponibilizados pela JVM.
+- Selecione algoritmos, distribuicoes de dados e versoes serial/paralela.
+- Clique em Executar benchmark. A interface continua responsiva durante os testes.
+- A aba Resultados mostra media, mediana, desvio-padrao populacional, minimo,
+  maximo e speedup para cada configuracao.
+- A aba Grafico dinamico permite escolher algoritmo, distribuicao e metrica.
+- Ao final, dois CSVs sao gravados automaticamente na pasta resultados/:
+  * resultados_ordenacao_DATA_HORA.csv: uma linha por medicao;
+  * resumo_ordenacao_DATA_HORA.csv: estatisticas agregadas por configuracao.
+- O botao Exportar CSV... permite escolher outro local. O resumo e salvo ao lado
+  do CSV detalhado, com o sufixo _resumo.
+
+ENTRADAS
+--------
+- Aleatorio: inteiros pseudoaleatorios.
+- Ordenado: valores crescentes.
+- Inverso: valores decrescentes.
+- Quase ordenado: vetor ordenado com aproximadamente 1% de trocas aleatorias.
+- Muitos repetidos: valores sorteados de uma faixa pequena.
+
+COMO INTERPRETAR
+----------------
+- Os tempos sao medidos com System.nanoTime(). A clonagem do vetor, a geracao de
+  dados, a validacao de ordenacao, a criacao do pool e a exportacao CSV ficam fora
+  da regiao cronometrada. O custo de escalonamento das tarefas internas fica dentro.
+- Antes dos testes, a JVM executa aquecimento para reduzir o efeito inicial de
+  compilacao JIT. Mesmo assim, execute mais de uma rodada se precisar de resultados
+  academicos robustos e compare na mesma maquina, sem carga concorrente relevante.
+- Speedup = media serial / media paralela. Maior que 1 significa que a media
+  paralela foi menor; menor que 1 significa que a versao paralela foi mais lenta.
+- Bubble, Selection e Insertion possuem comportamento quadratico em sua forma
+  serial classica. Comece por tamanhos pequenos e aumente gradualmente. O programa
+  exibe um aviso para tamanhos acima de 3000.
+- A variante paralela de Bubble Sort usa fases odd-even, com comparacoes
+  independentes dentro de cada fase. A variante paralela de Selection Sort busca
+  o menor elemento da faixa restante com reducao paralela. A variante paralela de
+  Insertion Sort ordena blocos com insertion sort e combina os blocos ordenados
+  com merge paralelo; por isso deve ser descrita no relatorio como variante hibrida.
+- A JVM pode reportar um numero de processadores diferente do numero fisico da
+  maquina, por exemplo por limites de container ou configuracao do sistema.
+- As amostras utilizam os mesmos dados de entrada por algoritmo dentro da mesma
+  combinacao de tamanho/distribuicao/amostra, permitindo comparacao mais justa.
+- Cada resultado e verificado para garantir que o vetor final esteja ordenado.
+
+AUTOTESTE
+---------
+Execute Autoteste.bat para comparar todas as variantes com Arrays.sort em varios
+vetores de teste. Tambem e possivel executar pelo terminal:
+  java -jar OrdenacaoParalela.jar --self-test
+
+ARQUIVOS
+--------
+Iniciar.bat                  Inicia a aplicacao ja compilada.
+Compilar_e_Executar.bat      Compila o fonte e executa (requer JDK).
+Autoteste.bat                Valida os algoritmos automaticamente.
+OrdenacaoParalela.jar        Aplicacao compilada.
+src/BenchmarkOrdenacaoApp.java  Codigo-fonte completo.
+Modelo_Relatorio.md          Estrutura sugerida para o relatorio do trabalho.
+resultados/                  Pasta usada para os CSVs gerados.
